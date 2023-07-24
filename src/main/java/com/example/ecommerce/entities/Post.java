@@ -7,8 +7,11 @@ import lombok.*;
 
 import java.util.Date;
 
+
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Post {
 
@@ -19,6 +22,9 @@ public class Post {
     private String description;
     private boolean deleted;
     private String address;
+    private String name;
+    private String type;
+
 
     @ManyToOne
     private User user;
@@ -26,6 +32,10 @@ public class Post {
     private Date createdAt;
     @Enumerated(EnumType.STRING)
     private Status status ;
+
+    @Lob
+    @Column(name = "image", length = 1000000)
+    private byte[] image;
 
 
 }

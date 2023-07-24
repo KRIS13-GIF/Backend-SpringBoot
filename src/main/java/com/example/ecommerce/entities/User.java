@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -34,7 +35,6 @@ public class User {
     private Role role;
     private Date createdAt;
     private Boolean deleted;
-
 
 
 }

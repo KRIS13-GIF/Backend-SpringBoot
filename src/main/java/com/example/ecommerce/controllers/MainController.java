@@ -8,9 +8,13 @@ import com.example.ecommerce.services.FavServices;
 import com.example.ecommerce.services.PostService;
 import com.example.ecommerce.services.UsersService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,6 +134,15 @@ public class MainController {
         return (post);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> downloadImage(@PathVariable String id){
+        byte[] imageData=postService.downloadImage(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+
+    }
+
     @PostMapping("find/postUser/{id}")
     public List<Post>findPostByUser(
             @PathVariable(name = "id")String id,
@@ -137,6 +150,18 @@ public class MainController {
         List<Post>posts=postService.findPostsByUser(postReq2, id);
         return posts;
     }
+
+    @PostMapping("/upload/{id}")
+    public ResponseEntity<String>uploadImage(
+            @PathVariable(name = "id")String id,
+            @RequestParam("image")MultipartFile multipartFile
+            ) throws IOException {
+        String res= postService.uploadImage(id, multipartFile);
+        return  ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+
+
 
 
 
@@ -147,6 +172,17 @@ public class MainController {
         return postService.findAllByUser(userId);
     }
 
+
+    @GetMapping("/getImage/{id}")
+    public ResponseEntity<String> getImage(@PathVariable(name = "id") String id) {
+        try {
+            byte[] imageData = postService.getImage(id);
+            String base64Image = Base64.getEncoder().encodeToString(imageData);
+            return ResponseEntity.ok().body(base64Image);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching image: " + e.getMessage());
+        }
+    }
 
 
     @PostMapping("/addFav/{id}")

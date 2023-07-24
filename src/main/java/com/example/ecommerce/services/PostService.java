@@ -9,11 +9,16 @@ import com.example.ecommerce.models.PostReq2;
 import com.example.ecommerce.models.PostRequest;
 import com.example.ecommerce.models.PostResponse;
 import com.example.ecommerce.repositories.PostRepo;
+
+import com.example.ecommerce.util.ImageUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.lang.reflect.Field;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -53,6 +58,32 @@ public class PostService {
         }
         throw new Exception("You need to be a user");
     }
+
+    public String uploadImage(String postId, MultipartFile multipartFile) throws IOException {
+        Optional<Post>postOptional=postRepo.findById(postId);
+        if (postOptional.isEmpty()){
+            throw new EntityNotFoundException("Post does not exist");
+        }
+        Post post=postOptional.get();
+        post.setName(multipartFile.getOriginalFilename());
+        post.setType(multipartFile.getContentType());
+        post.setImage(ImageUtil.compressImage(multipartFile.getBytes()));
+        postRepo.save(post);
+
+        return "FIle uploaded ";
+    }
+
+    public byte[] downloadImage(String id){
+        Optional<Post> dbImageData = postRepo.findById(id);
+        byte[] images=ImageUtil.decompressImage(dbImageData.get().getImage());
+        return images;
+    }
+
+    public byte[] getImage(String id){
+        return postRepo.findById(id).get().getImage();
+    }
+
+
 
     public PostResponse updatePost(PostRequest postRequest, String id) throws Exception {
         // List<String> stringList = new ArrayList<>();
