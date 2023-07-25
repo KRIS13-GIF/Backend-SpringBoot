@@ -7,6 +7,7 @@ import com.example.ecommerce.entities.Post;
 import com.example.ecommerce.entities.User;
 import com.example.ecommerce.enumerations.Role;
 import com.example.ecommerce.enumerations.Status;
+import com.example.ecommerce.models.PostRequest;
 import com.example.ecommerce.models.PostResponse;
 import com.example.ecommerce.repositories.PostRepo;
 import com.example.ecommerce.services.PostService;
@@ -24,13 +25,34 @@ import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
+    @Mock
+    UsersService usersService;
 
     @Mock
     private PostRepo postRepo;
 
     @InjectMocks
     PostService postService;
-    UsersService usersService;
+
+
+    @Test
+    @DisplayName("This method creates a post")
+    void testCreatePostSuccess() throws Exception {
+        String userId = "some_user_id";
+        PostRequest postRequest = new PostRequest();
+        postRequest.setTitle("Some title");
+        postRequest.setDescription("Some description");
+        User user = new User();
+        user.setId(userId);
+        user.setRole(Role.USER);
+        when(usersService.findUser(userId)).thenReturn(user);
+        when(postRepo.findAll()).thenReturn(new ArrayList<>());
+        Post savedPost = new Post();
+        savedPost.setId("some_post_id");
+        when(postRepo.save(any(Post.class))).thenReturn(savedPost);
+        PostResponse response = postService.createPost(postRequest, userId);
+        assertEquals(savedPost.getId(), response.getId());
+    }
 
     @Test
     @DisplayName("This method deletes a post")

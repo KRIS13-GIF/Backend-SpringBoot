@@ -1,12 +1,12 @@
 package com.example.ecommerce.services;
 
+import com.example.ecommerce.entities.Post;
 import com.example.ecommerce.entities.User;
 import com.example.ecommerce.enumerations.Role;
 import com.example.ecommerce.models.UserRequest;
 import com.example.ecommerce.models.UserResponse;
 import com.example.ecommerce.repositories.UserRepo;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.sql.Date;
@@ -19,8 +19,10 @@ import java.util.stream.Collectors;
 public class UsersService {
     private final UserRepo userRepo;
 
+
     public UsersService(UserRepo userRepo) {
         this.userRepo = userRepo;
+
     }
 
     public UserResponse createUser(UserRequest userRequest) throws Exception {
@@ -70,6 +72,8 @@ public class UsersService {
 
     public UserResponse updateUser(UserRequest userRequest, String id) throws Exception {
         Optional<User> users = userRepo.findById(id);
+
+
         if (users.isEmpty()) {
             throw new Exception("Product does not exist");
         }

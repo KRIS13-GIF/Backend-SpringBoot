@@ -4,7 +4,6 @@ import com.example.ecommerce.entities.Favourites;
 import com.example.ecommerce.entities.Post;
 import com.example.ecommerce.models.FavResponse;
 import com.example.ecommerce.repositories.FavRepo;
-import org.apache.catalina.LifecycleState;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;

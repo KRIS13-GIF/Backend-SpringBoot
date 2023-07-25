@@ -91,13 +91,14 @@ public class PostService {
 
         Post optionalPost = post.get();// e merr optional si objekt.
         if (optionalPost.getStatus() == Status.PENDING) {
-            if (postRequest.getTitle() == "" || postRequest.getDescription() == "") {
+            if (postRequest.getTitle() == "" || postRequest.getDescription() == "" || postRequest.getAddress()==" ") {
                 throw new Exception("No blank values are allowed");
 
             }
             else{
                 optionalPost.setTitle(postRequest.getTitle());
                 optionalPost.setDescription(postRequest.getDescription());
+                optionalPost.setAddress(postRequest.getAddress());
             }
 
 
