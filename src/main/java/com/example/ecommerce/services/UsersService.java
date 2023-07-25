@@ -73,6 +73,12 @@ public class UsersService {
         if (users.isEmpty()) {
             throw new Exception("Product does not exist");
         }
+
+        if (userRequest.getUsername()=="" || userRequest.getFirstName()==""
+        || userRequest.getLastName()=="" || userRequest.getEmail()=="" || userRequest.getAddress()==""){
+            throw new Exception("No blank fields allowed!");
+        }
+
         User user = users.get();
         if (userRequest.getUsername() != null) {
             user.setUsername(userRequest.getUsername());

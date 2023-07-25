@@ -40,11 +40,6 @@ public class PostService {
     public PostResponse createPost(PostRequest postRequest, String id) throws Exception {
         User user = usersService.findUser(id);
         List<Post>postList=postRepo.findAll();
-        for(int i=0; i<postList.size(); i++){
-            if (postList.get(i).getTitle().equals(postRequest.getTitle()) && postList.get(i).getDescription().equals(postRequest.getDescription())){
-                throw new Exception("You can not create two same posts.");
-            }
-        }
         if (user.getRole() == Role.USER) {
             Post post = new Post();
             post.setTitle(postRequest.getTitle());
@@ -96,12 +91,16 @@ public class PostService {
 
         Post optionalPost = post.get();// e merr optional si objekt.
         if (optionalPost.getStatus() == Status.PENDING) {
-            if (postRequest.getTitle() != null) {
-                optionalPost.setTitle(postRequest.getTitle());
+            if (postRequest.getTitle() == "" || postRequest.getDescription() == "") {
+                throw new Exception("No blank values are allowed");
+
             }
-            if (postRequest.getDescription() != null) {
+            else{
+                optionalPost.setTitle(postRequest.getTitle());
                 optionalPost.setDescription(postRequest.getDescription());
             }
+
+
 
         }
         Post savedPost = postRepo.save(optionalPost);
