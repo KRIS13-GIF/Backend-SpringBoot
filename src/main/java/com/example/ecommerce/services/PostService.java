@@ -168,6 +168,7 @@ public class PostService {
 
 
 
+
     public List<Post>findAllByUser(String id){
         List<Post> postlist=postRepo.findAllByUser_Id(id);
         return postlist;
@@ -199,6 +200,13 @@ public class PostService {
         else {
             return null;
         }
+    }
+
+    public void hardDelete(String id) throws Exception {
+        if (postRepo.findById(id).isEmpty()){
+            throw new Exception("Id does not exist");
+        }
+        postRepo.deleteById(id);
     }
 
 

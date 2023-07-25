@@ -199,6 +199,16 @@ public class MainController {
         favServices.deleteFromFav(id);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @DeleteMapping("deleteHardPost/{id}")
+    public ResponseEntity deletePostHard(
+            @PathVariable(name = "id")String id
+    )throws Exception{
+        postService.hardDelete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
     @GetMapping("/allFav")
     public List<Favourites>showAllFav(){
         return favServices.showAllFav();
