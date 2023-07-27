@@ -4,6 +4,8 @@ import com.example.ecommerce.entities.Favourites;
 import com.example.ecommerce.entities.Post;
 import com.example.ecommerce.models.FavResponse;
 import com.example.ecommerce.repositories.FavRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +16,13 @@ public class FavServices {
     private final FavRepo favRepo;
     private final PostService postService;
 
-    private final UsersService usersService;
 
-    public FavServices(FavRepo favRepo, PostService postService, UsersService usersService) {
+
+    @Autowired
+    public FavServices(FavRepo favRepo, @Lazy PostService postService) {
         this.favRepo = favRepo;
         this.postService = postService;
-        this.usersService = usersService;
+
     }
 
     public FavResponse addFavorite(String id) throws Exception {
@@ -46,6 +49,12 @@ public class FavServices {
             throw new Exception("Fav id does not exist");
         }
         favRepo.deleteById(id);
+    }
+
+
+    public void deleteFavWhenPostDeleted(String id) throws Exception{
+        List<Favourites> favouritesList = favRepo.findAllByPostId(id);
+        favRepo.deleteAll(favouritesList);
     }
 
     public List<Favourites>showAllFav(){

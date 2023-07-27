@@ -38,7 +38,8 @@ public interface PostRepo extends JpaRepository<Post, String> {
 
     Optional<Post> findById(String id);
 
-    //@Query(nativeQuery = true, value ="SELECT * FROM e-commerce.post ");
+
+    //List<Post>findAllByUserId();
 
 
 

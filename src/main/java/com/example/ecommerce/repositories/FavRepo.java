@@ -11,4 +11,6 @@ import java.util.List;
 public interface FavRepo extends JpaRepository<Favourites, String> {
 
     List<Favourites>findAllByUser_Id(String id);
+    List<Favourites>findAllByPostId(String id);
+
 }

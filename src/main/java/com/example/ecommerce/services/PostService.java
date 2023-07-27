@@ -12,6 +12,8 @@ import com.example.ecommerce.repositories.PostRepo;
 
 import com.example.ecommerce.util.ImageUtil;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +34,14 @@ public class PostService {
     private final PostRepo postRepo;
     private final UsersService usersService;
 
-    public PostService(PostRepo postRepo, UsersService usersService) {
+    private final FavServices favServices;
+
+
+    @Autowired
+    public PostService(PostRepo postRepo, UsersService usersService, @Lazy FavServices favServices) {
         this.postRepo = postRepo;
         this.usersService = usersService;
+        this.favServices = favServices;
     }
 
     public PostResponse createPost(PostRequest postRequest, String id) throws Exception {
@@ -120,6 +127,12 @@ public class PostService {
         Post post1 = post.get();
         post1.setDeleted(true);
         postRepo.save(post1);
+
+        try {
+            favServices.deleteFavWhenPostDeleted(id);
+        } catch (Exception e) {
+
+        }
     }
 
     public PostResponse changeStatus(String idAdmin, String idProduct) throws Exception {
@@ -224,12 +237,12 @@ public class PostService {
             return  postRepo.findByStatusAndTitle(postReq2.getStatus(), postReq2.getTitle());
 
         }
-       else  if(postReq2.getDescription()!=""&&postReq2.getStatus()!=null){
-           return postRepo.findByStatusAndDescription(postReq2.getStatus(), postReq2.getDescription());
+        else  if(postReq2.getDescription()!=""&&postReq2.getStatus()!=null){
+            return postRepo.findByStatusAndDescription(postReq2.getStatus(), postReq2.getDescription());
         }
 
-       else if (postReq2.getTitle()!=""){
-           return postRepo.findByTitle(postReq2.getTitle());
+        else if (postReq2.getTitle()!=""){
+            return postRepo.findByTitle(postReq2.getTitle());
         }
 
         else if (postReq2.getDescription()!=""){
@@ -252,5 +265,3 @@ public class PostService {
 
     }
 }
-
-

@@ -7,6 +7,8 @@ import com.example.ecommerce.models.*;
 import com.example.ecommerce.services.FavServices;
 import com.example.ecommerce.services.PostService;
 import com.example.ecommerce.services.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,8 @@ public class MainController {
 
 
 
-
-    public MainController(UsersService usersService, PostService postService, FavServices favServices) {
+@Autowired
+    public MainController(UsersService usersService, @Lazy PostService postService, FavServices favServices) {
         this.usersService = usersService;
         this.postService = postService;
         this.favServices = favServices;
@@ -42,7 +44,7 @@ public class MainController {
     @PostMapping("/create/user")
     public ResponseEntity <UserResponse>createUser(
             @RequestBody UserRequest userRequest
-            ) throws Exception {
+    ) throws Exception {
         UserResponse response=usersService.createUser(userRequest);
         return new ResponseEntity(response,HttpStatus.OK);
     }
@@ -65,7 +67,7 @@ public class MainController {
     @PutMapping("/update/user/{id}")
     public ResponseEntity<UserResponse>updateUser(
             @RequestBody UserRequest userRequest,
-             @PathVariable String id
+            @PathVariable String id
     ) throws Exception{
         UserResponse response=usersService.updateUser(userRequest, id);
         return new ResponseEntity(response, HttpStatus.OK);
@@ -88,7 +90,7 @@ public class MainController {
     public ResponseEntity<PostResponse>createProduct(
             @RequestBody PostRequest postRequest,
             @PathVariable String id
-            )throws Exception{
+    )throws Exception{
         return new ResponseEntity(postService.createPost(postRequest, id), HttpStatus.OK);
     }
     @PatchMapping("/update/post/{id}")
@@ -129,7 +131,7 @@ public class MainController {
     @PostMapping("/find/post")
     public List<Post> findPosts(
             @RequestBody PostReq2 postReq2
-            )throws Exception{
+    )throws Exception{
         List<Post> post=  postService.findPost(postReq2);
         return (post);
     }
@@ -155,7 +157,7 @@ public class MainController {
     public ResponseEntity<String>uploadImage(
             @PathVariable(name = "id")String id,
             @RequestParam("image")MultipartFile multipartFile
-            ) throws IOException {
+    ) throws IOException {
         String res= postService.uploadImage(id, multipartFile);
         return  ResponseEntity.status(HttpStatus.OK).body(res);
     }

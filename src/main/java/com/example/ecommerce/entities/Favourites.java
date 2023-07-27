@@ -20,4 +20,8 @@ public class Favourites {
 
     @ManyToOne
     private User user;
+
+
+
+
 }
