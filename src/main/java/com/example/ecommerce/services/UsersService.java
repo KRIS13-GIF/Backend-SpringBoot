@@ -85,6 +85,12 @@ public class UsersService {
 
         User user = users.get();
         if (userRequest.getUsername() != null) {
+            List<User>userList=userRepo.findAll();
+            for(int i=0; i<userList.size(); i++){
+                if (userList.get(i).getUsername().equals(userRequest.getUsername())){
+                    throw new Exception("This username already exists. No update allowed");
+                }
+            }
             user.setUsername(userRequest.getUsername());
         }
         if (userRequest.getFirstName() != null) {
